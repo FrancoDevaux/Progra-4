@@ -1,4 +1,7 @@
+# Diagrama UML (`Ejercicio 3`)
+
 ![Imagen de WhatsApp 2025-09-05 a las 17 55 11_d47a3e1f](https://github.com/user-attachments/assets/8f652f82-57d1-42ec-9a4a-13d31835942e)
+
 
 # Diagrama UML (`Ejercicio 5`)
 
