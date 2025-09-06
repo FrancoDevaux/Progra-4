@@ -5,5 +5,5 @@
 #
 # Diagrama UML (`Ejercicio 5`)
 
-<img width="1040" height="799" alt="image" src="https://github.com/user-attachments/assets/946fc7fa-9d77-4f47-bb55-125e5bfd442e" />
+<img width="1062" height="800" alt="image" src="https://github.com/user-attachments/assets/82ef1c66-cbc4-474f-b172-fcb7f53be8f5" />
 
