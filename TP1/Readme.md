@@ -1,6 +1,6 @@
 # Diagrama UML (`Ejercicio 3`)
 
-<img width="665" height="714" alt="image" src="https://github.com/user-attachments/assets/cb1739c1-04cc-4586-8e46-9fe76868331c" />
+<img width="1063" height="731" alt="image" src="https://github.com/user-attachments/assets/9388e7b1-df07-4beb-a9b6-3495b0e47bc4" />
 
 #
 # Diagrama UML (`Ejercicio 5`)
