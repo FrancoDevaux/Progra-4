@@ -13,7 +13,7 @@ npm run coverage
 ## Guia de instalacion
 -Clonar el repositorio
 ```
-Git clone 
+Git clone https://github.com/FrancoDevaux/Progra-4/tree/main
 ```
 -Instalar
 ```
