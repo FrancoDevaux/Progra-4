@@ -1,9 +1,4 @@
-# Endpoints: 
-- GET /order/:id  --> Devuleve las ordenes 
-- GET /orders?status --> Obtener el estado de la orden
-- POST /orders  --> Crear una orden
-- POST /orders/:id/cancel --> Cancelar una orden
-- POST /orders/:id/entregado --> Entregar la orden
+
 # Que se utilizo
 -En este proyecto se utilizo vitest
 # Como correr coverage
@@ -92,6 +87,14 @@ npm run test
 | CA7  | Marcar pedido como entregado                    | Pedido creado                       | id de pedido válido                                            | POST /orders/:id/entregado    | 200 - body: { status: "entregado" }                    | orders.test.ts - "Debería marcar un pedido como entregado"         
 | CA8  | No marcar como entregado un pedido cancelado    | Pedido cancelado                    | id de pedido válido                                            | POST /orders/:id/entregado    | 409                                                    | orders.test.ts - "No se debe marcar como entregado un pedido cancelado"
 | ER1  | Validar toppings correctos                      | —                                   | —                                                              | —                            | Valid_Toppings = ["cebolla", "4 quesos", "huevos", "tomate", "aceitunas"] | orders.test.ts - "debería tener los toppings correctos"
+
+# Endpoints: 
+- GET /order/:id  --> Devuleve las ordenes 
+- GET /orders?status --> Obtener el estado de la orden
+- POST /orders  --> Crear una orden
+- POST /orders/:id/cancel --> Cancelar una orden
+- POST /orders/:id/entregado --> Entregar la orden
+
 ## Ejemplo de curls
 
 ### ``POST /orders``
