@@ -1,4 +1,31 @@
-
+# Endpoints: 
+- GET /order/:id  --> Devuleve las ordenes 
+- GET /orders?status --> Obtener el estado de la orden
+- POST /orders  --> Crear una orden
+- POST /orders/:id/cancel --> Cancelar una orden
+- POST /orders/:id/entregado --> Entregar la orden
+# Que se utilizo
+-En este proyecto se utilizo vitest
+# Como correr coverage
+```
+npm run coverage
+```
+## Guia de instalacion
+-Clonar el repositorio
+```
+Git clone 
+```
+-Instalar
+```
+npm install
+```
+-Correr los test y el programa
+```
+npm run start
+```
+```
+npm run test
+```
 ## Historias de Usuario y Tests
 
 ### 1. Como cliente, quiero crear un pedido con toppings válidos para recibir mi pizza personalizada.
@@ -52,12 +79,6 @@
 ### 9. Como desarrollador, quiero que la lista de toppings válidos esté correctamente definida.
 - **Test:** debería tener los toppings correctos
 - **Criterio de aceptación:** El sistema tiene la lista de toppings válida y actualizada.
-# Endpoints: 
-- GET /order/:id  --> Devuleve las ordenes 
-- GET /orders?status --> Obtener el estado de la orden
-- POST /orders  --> Crear una orden
-- POST /orders/:id/cancel --> Cancelar una orden
-- POST /orders/:id/entregado --> Entregar la orden
 - --------------------------------------------
 ## Matriz de caso de uso
 | ID   | Caso / Descripción                              | Precondición (estado/mocks)         | Input (query/body/params)                                      | Acción (HTTP)                  | Resultado esperado                                      | Test (archivo - nombre)                                 |
