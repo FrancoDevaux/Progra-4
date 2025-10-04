@@ -30,8 +30,8 @@ Un *doble de prueba* reemplaza componentes reales para aislar el comportamiento 
 ---
 
 ## 4. Separar app de server
-
 Separar app del server permite testear la aplicación sin levantar un puerto real.  
+``` typescript
 makeApp() crea la app Express, y el server solo la ejecuta.
 
 import express from "express";
@@ -50,7 +50,7 @@ const app = makeApp();
 app.listen(3000, () => {
     console.log("on port 3000");
 })
-
+```
 
 
 ## 5. Zod: diferencia entre parse y safeParse
@@ -98,7 +98,7 @@ Buscar 100% de cobertura puede generar *tests inútiles o frágiles*, donde se t
 
 Un *helper* o *builder* genera objetos o estados preconfigurados para simplificar tests.  
 Ejemplo:
-
+``` typescript
 // userBuilder.ts
 export interface User {
   name: string;
@@ -111,7 +111,7 @@ export function userBuilder(overrides: Partial<User> = {}): User {
     name: "Usuario Test",
     age: 25,
     email: "test@example.com",
-    ...overrides, // permite personalizar campos según el test
+    ...overrides,
   };
 }
 // user.test.ts
@@ -126,3 +126,4 @@ test("permite sobreescribir campos opcionales", () => {
   const user = userBuilder({ email: "nuevo@mail.com" });
   expect(user.email).toBe("nuevo@mail.com");
 });
+```
