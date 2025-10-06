@@ -1,7 +1,4 @@
-# Que se utilizo
-- En este proyecto se utilizo vitest
-
-## Guia de instalacion
+# Guia de instalación
 - Clonar el repositorio
 ```ruby
 Git clone https://github.com/FrancoDevaux/Progra-4/tree/main
@@ -17,10 +14,13 @@ npm run start
 ```ruby
 npm run test
 ```
-# Como correr coverage
+## Como correr coverage
 ```ruby
 npm run coverage
 ```
+## Que se utilizó
+- En este proyecto se utilizo vitest
+
 ## Historias de Usuario y Tests
 
 ### 1. Como cliente, quiero crear un pedido con toppings válidos para recibir mi pizza personalizada.
