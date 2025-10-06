@@ -19,7 +19,7 @@ npm run test
 npm run coverage
 ```
 ## Que se utilizó
-- En este proyecto se utilizo vitest
+- En este proyecto se utilizo **vitest**
 
 # Historias de Usuario y Tests
 
