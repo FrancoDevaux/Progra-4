@@ -1,24 +1,23 @@
-
 # Que se utilizo
 -En este proyecto se utilizo vitest
 # Como correr coverage
-```
+```ruby
 npm run coverage
 ```
 ## Guia de instalacion
 -Clonar el repositorio
-```
+```ruby
 Git clone https://github.com/FrancoDevaux/Progra-4/tree/main
 ```
 -Instalar
-```
+```ruby
 npm install
 ```
 -Correr los test y el programa
-```
+```ruby
 npm run start
 ```
-```
+```ruby
 npm run test
 ```
 ## Historias de Usuario y Tests
