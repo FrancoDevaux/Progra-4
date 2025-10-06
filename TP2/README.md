@@ -21,7 +21,7 @@ npm run coverage
 ## Que se utilizó
 - En este proyecto se utilizo vitest
 
-## Historias de Usuario y Tests
+# Historias de Usuario y Tests
 
 ### 1. Como cliente, quiero crear un pedido con toppings válidos para recibir mi pizza personalizada.
 - **Test:** Debería crear un pedido con toppings válidos
