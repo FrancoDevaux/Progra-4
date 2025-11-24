@@ -23,7 +23,7 @@ const getProducts = (req, res) => {
 
   db.query(query, params, (err, results) => {
     if (err) {
-      // Evitar exponer detalles de la BD en la respuesta
+      console.error(err);
       return res.status(500).json({ error: 'Internal server error' });
     }
     res.json(results || []);
