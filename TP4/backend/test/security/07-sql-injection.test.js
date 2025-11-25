@@ -46,7 +46,7 @@ describe('Seguridad: SQL Injection', () => {
   test('❌ DEBE FALLAR: No debe exponer información de la base de datos', async () => {
     const response = await request(app)
       .get('/api/products')
-      .query({ 
+      .query({
         category: "' UNION SELECT table_name, column_name, null, null, null FROM information_schema.columns --"
       });
 
@@ -61,7 +61,7 @@ describe('Seguridad: SQL Injection', () => {
     // Intento de inyección que cambiaría la lógica
     const response = await request(app)
       .get('/api/products')
-      .query({ 
+      .query({
         category: "Electronics' OR category='Furniture"
       });
 
@@ -95,48 +95,46 @@ describe('📝 INSTRUCCIONES PARA CORREGIR SQL INJECTION', () => {
     const instrucciones = `
     1. Usar consultas parametrizadas/prepared statements:
        const query = 'SELECT * FROM products WHERE category = ? AND name LIKE ?';
-       const params = [category, '%' + search + '%'];
-       
-       db.query(query, params, (err, results) => {
+      const params = [category, '%' + search + '%'];
+      
+      db.query(query, params, (err, results) => {
          // Manejar resultados
-       });
+      });
     
     2. Validar y sanitizar entrada:
-       const { body, validationResult } = require('express-validator');
-       
-       router.get('/products',
-         query('category').isAlphanumeric().optional(),
-         query('search').escape().optional(),
-         (req, res) => {
-           const errors = validationResult(req);
-           if (!errors.isEmpty()) {
-             return res.status(400).json({ errors: errors.array() });
-           }
-         }
-       );
+          const { body, validationResult } = require('express-validator');
+      
+      router.get('/products',
+        query('category').isAlphanumeric().optional(),
+        query('search').escape().optional(),
+        (req, res) => {
+          const errors = validationResult(req);
+          if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+          }
+        }
+      );
     
     3. Usar un ORM como Sequelize:
-       const products = await Product.findAll({
-         where: {
-           category: category,
-           name: { [Op.like]: '%' + search + '%' }
-         }
-       });
+      const products = await Product.findAll({
+        where: {
+          category: category,
+          name: { [Op.like]: '%' + search + '%' }
+        }
+      });
     
     4. Principio de menor privilegio:
-       - Crear usuario de BD con permisos limitados
-       - Solo SELECT en tablas necesarias
-       - Sin permisos de DROP, CREATE, etc.
+      - Crear usuario de BD con permisos limitados
+      - Solo SELECT en tablas necesarias
+      - Sin permisos de DROP, CREATE, etc.
     
     5. Escapar caracteres especiales:
-       const mysql = require('mysql2');
-       const escapedCategory = mysql.escape(category);
+      const mysql = require('mysql2');
+      const escapedCategory = mysql.escape(category);
     
     6. Nunca concatenar strings para formar queries:
        // MALO: query += " AND category = '" + category + "'";
-       // BUENO: usar placeholders ?
-    `;
-    
+       // BUENO: usar placeholders ?`;
     console.log(instrucciones);
     expect(true).toBe(true);
   });
