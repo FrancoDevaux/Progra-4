@@ -94,12 +94,12 @@ ciberseg-tp/
 1. Clona o descarga el proyecto
 
 2. Navega al directorio del proyecto:
-```bash
+```ruby
 cd aplicacion-vulnerable
 ```
 
 3. Ejecuta con Docker Compose:
-```bash
+```ruby
 docker compose up --build
 ```
 
@@ -123,7 +123,7 @@ docker compose up --build
 ### Metodología TDD (Test-Driven Development)
 
 1. **Ejecutar tests iniciales** (todos fallarán):
-   ```bash
+   ```ruby
    cd backend
    npm run test:security
    ```
@@ -139,7 +139,7 @@ docker compose up --build
 
 ### Ejemplo de flujo de trabajo:
 
-```bash
+```ruby
 # 1. Ver estado inicial
 npm run test:security
 # Resultado: 0/8 ❌
@@ -248,7 +248,7 @@ El backend sigue una arquitectura MVC organizada con separación de código y te
 Si prefieres ejecutar sin Docker:
 
 ### Backend
-```bash
+```ruby
 cd backend
 npm install
 npm start
@@ -256,7 +256,7 @@ npm start
 ```
 
 ### Frontend
-```bash
+```ruby
 cd frontend
 npm install
 npm run dev
@@ -265,7 +265,7 @@ npm run dev
 
 ### Base de Datos
 Necesitarás MySQL corriendo localmente:
-```bash
+```ruby
 # Crear base de datos
 mysql -u root -p < backend/init.sql
 ```
@@ -290,7 +290,7 @@ El trabajo estará completo cuando:
 ## 📝 Comandos Útiles
 
 ### Tests
-```bash
+```ruby
 # Ejecutar todos los tests de seguridad
 npm run test:security
 
@@ -305,7 +305,7 @@ npm run test:coverage
 ```
 
 ### Docker
-```bash
+```ruby
 # Iniciar todos los servicios
 docker compose up --build
 
@@ -324,7 +324,7 @@ docker compose restart backend
 ```
 
 ### Base de Datos
-```bash
+```ruby
 # Acceder a MySQL desde contenedor
 docker exec -it vulnerable_mysql mysql -uappuser -papppass123 vulnerable_app
 
