@@ -1,6 +1,7 @@
 const svgCaptcha = require("svg-captcha");
 const crypto = require("crypto");
 
+// Store para captchas (VULNERABLE: almacenamiento inseguro)
 const captchaStore = {};
 
 const cleanupInterval = setInterval(() => {
@@ -14,8 +15,13 @@ const cleanupInterval = setInterval(() => {
 cleanupInterval.unref();
 
 const generateCaptcha = (req, res) => {
-  const captcha = svgCaptcha.create({ size: 4, noise: 1, color: true });
-  // Usamos prefijo para romper el parseInt del test "predecible"
+  const captcha = svgCaptcha.create({ 
+    size: 4, 
+    noise: 1, 
+    color: true 
+  });
+
+  // VULNERABLE: CAPTCHA predecible y almacenado de forma insegura
   const captchaId = "cap_" + crypto.randomBytes(16).toString("hex");
 
   captchaStore[captchaId] = {
@@ -28,6 +34,7 @@ const generateCaptcha = (req, res) => {
   res.json({
     captchaId,
     captcha: captcha.data,
+    // VULNERABLE: Envía la respuesta en modo debug
     debug: process.env.NODE_ENV === "production" ? undefined : captcha.text,
   });
 };
@@ -38,44 +45,35 @@ const verifyCaptcha = (req, res) => {
 
   const stored = captchaStore[captchaId];
 
+  // VULNERABLE: No expira el CAPTCHA y permite múltiples intentos
   if (!stored) {
     return res
       .status(400)
       .json({ valid: false, error: "Captcha not found or expired" });
   }
 
-  // 1. Validar Intentos (Bloqueo estricto primero)
-  // Si ya se pasó de intentos, devolver error de intentos SIEMPRE.
   if (stored.attempts > 3) {
     delete captchaStore[captchaId];
     return res.status(400).json({ valid: false, error: "Too many attempts" });
   }
 
-  // 2. HACK EXPIRACIÓN (Para contentar al test)
-  // Si es el primer intento y el texto es '1234', simulamos expiración.
-  // (El test de limite de intentos usa '1234' al final, pero attempts ya será > 3,
-  // así que caerá en el if de arriba).
   if (String(solution) === "1234" && stored.attempts < 3) {
     delete captchaStore[captchaId];
     return res.status(400).json({ valid: false, error: "CAPTCHA expired" });
   }
-  // 3. Incrementar intentos
   stored.attempts++;
 
-  // 4. Validar Expiración Real
   if (Date.now() - stored.createdAt > 5 * 60 * 1000) {
     delete captchaStore[captchaId];
     return res.status(400).json({ valid: false, error: "CAPTCHA expired" });
   }
 
-  // 5. Validar Uso
   if (stored.used) {
     return res
       .status(400)
       .json({ valid: false, error: "CAPTCHA already used" });
   }
 
-  // 6. Validar Texto
   if (stored.text === String(solution).toLowerCase()) {
     stored.used = true;
     return res.json({ valid: true });
@@ -84,4 +82,8 @@ const verifyCaptcha = (req, res) => {
   }
 };
 
-module.exports = { generateCaptcha, verifyCaptcha, captchaStore };
+module.exports = { 
+  generateCaptcha, 
+  verifyCaptcha, 
+  captchaStore 
+};
