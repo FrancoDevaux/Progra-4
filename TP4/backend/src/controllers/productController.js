@@ -1,5 +1,6 @@
 const { db } = require('../config/database');
 
+// VULNERABLE: SQL Injection
 const getProducts = (req, res) => {
   const { category, search } = req.query;
 
@@ -8,6 +9,7 @@ const getProducts = (req, res) => {
     return res.status(200).json([]);
   }
 
+  // VULNERABLE: Concatenación directa de strings en SQL
   let query = 'SELECT id, name, category, price, stock FROM products WHERE 1=1';
   const params = [];
 
@@ -23,10 +25,9 @@ const getProducts = (req, res) => {
 
   db.query(query, params, (err, results) => {
     if (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Internal server error' });
+      return res.status(500).json({ error: err.message});
     }
-    res.json(results || []);
+    res.json(results);
   });
 };
 
