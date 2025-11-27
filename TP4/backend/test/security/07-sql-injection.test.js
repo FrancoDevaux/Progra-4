@@ -134,7 +134,9 @@ describe('📝 INSTRUCCIONES PARA CORREGIR SQL INJECTION', () => {
     
     6. Nunca concatenar strings para formar queries:
        // MALO: query += " AND category = '" + category + "'";
-       // BUENO: usar placeholders ?`;
+       // BUENO: usar placeholders ?
+    `;
+
     console.log(instrucciones);
     expect(true).toBe(true);
   });
