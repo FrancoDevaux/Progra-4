@@ -4,10 +4,9 @@ const vulnerabilityController = require('../controllers/vulnerabilityController'
 const { uploadMiddleware, uploadFile } = require('../controllers/uploadController');
 const csrf = require('csurf');
 
-// Configuración CSRF
+
 const csrfProtection = csrf();
 
-// Middleware para validar Origin (ANTES de CSRF)
 const validateOrigin = (req, res, next) => {
   const origin = req.get('origin');
   const allowedOrigins = ['http://localhost:3000']; 
@@ -18,21 +17,20 @@ const validateOrigin = (req, res, next) => {
   next();
 };
 
-//RUTAS
-//Command Injection
+// Command Injection
 router.post('/ping', vulnerabilityController.ping);
 
-//CSRF
-router.get('/csrf-token', csrfProtection, vulnerabilityController.getCsrfToken);
+// CSRF - Transferencia
 router.post('/transfer', validateOrigin, csrfProtection, vulnerabilityController.transfer);
+router.get('/csrf-token', csrfProtection, vulnerabilityController.getCsrfToken);
 
-//LFI
+// Local File Inclusion
 router.get('/file', vulnerabilityController.readFile);
 
-//Upload
+// File Upload
 router.post('/upload', uploadMiddleware, uploadFile);
 
-//IMPORTANTE: Manejador de errores para transformar el error de csurf en JSON
+
 router.use((err, req, res, next) => {
   if (err.code === 'EBADCSRFTOKEN') {
     return res.status(403).json({ error: 'CSRF token invalido' });
