@@ -3,42 +3,37 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const path = require("path");
 const { db } = require("../config/database");
-// Importamos el store del captcha para validar dentro del login
 const { captchaStore } = require("./captchaController");
 
-// Store para Rate Limiting en memoria
+
 const loginAttempts = {};
 const usernameCheckAttempts = {};
 
-// FIX LOGS: Simplificado para que no crashee los tests con fs.appendFile
 const logSuspiciousActivity = (username, ip, reason) => {
-  // Solo console.log, evitamos escribir en disco durante tests intensivos
   console.log(
     `[ALERTA SECURITY] IP ${ip} - User: ${username} - Razón: ${reason}`
   );
 };
 
+// VULNERABLE: Sin rate limiting para prevenir brute force
 const login = async (req, res) => {
-  // El test suele mandar { username, password, captchaId, captchaText }
+  
   const { username, password, captchaId, captchaText } = req.body;
-  const solution = captchaText || req.body.captcha; // Compatibilidad con diferentes tests
+  const solution = captchaText || req.body.captcha; 
 
   const ip = req.ip;
 
-  //PROTECCIÓN BRUTE FORCE
   if (!loginAttempts[ip])
     loginAttempts[ip] = { count: 0, firstAttempt: Date.now() };
 
-  // Resetear ventana de tiempo cada 15 min
   if (Date.now() - loginAttempts[ip].firstAttempt > 15 * 60 * 1000) {
     loginAttempts[ip] = { count: 0, firstAttempt: Date.now() };
   }
 
-  // Delay exponencial simulado (anti-timing attacks y slow down)
   const delay = Math.min(loginAttempts[ip].count * 100, 2000);
   await new Promise((resolve) => setTimeout(resolve, delay));
 
-  // Verificar si necesita CAPTCHA (después de 3 intentos fallidos)
+
   if (loginAttempts[ip].count >= 3) {
     if (!captchaId || !solution) {
       logSuspiciousActivity(
@@ -51,7 +46,7 @@ const login = async (req, res) => {
 
     const storedCaptcha = captchaStore[captchaId];
 
-    // Validaciones de Captcha
+    
     if (!storedCaptcha) {
       return res.status(400).json({ error: "Captcha inválido o expirado" });
     }
@@ -62,11 +57,11 @@ const login = async (req, res) => {
       logSuspiciousActivity(username, ip, "Captcha incorrecto");
       return res.status(400).json({ error: "Captcha incorrecto" });
     }
-    // Marcar como usado si pasó
+    
     storedCaptcha.used = true;
   }
 
-  //CONSULTA SEGURA
+  
   const query = `SELECT * FROM users WHERE username = ?`;
 
   db.query(query, [username], async (err, results) => {
@@ -89,7 +84,6 @@ const login = async (req, res) => {
       return await handleFailure("Contraseña incorrecta");
     }
 
-    //Login exitoso: Resetear intentos
     loginAttempts[ip] = { count: 0, firstAttempt: Date.now() };
 
     const token = jwt.sign(
@@ -129,17 +123,17 @@ const verifyToken = (req, res) => {
   }
 };
 
-//SOLUCIÓN BLIND SQL INJECTION
+// VULNERABLE: Blind SQL Injection
 const checkUsername = (req, res) => {
   const { username } = req.body;
   const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
   if (username && (username.includes("'") || username.includes("--"))) {
     console.warn("⚠️ Posible intento de SQL injection:", { ip, username });
   }
-  // 1. Rate Limiting específico para este endpoint
+  
   if (!usernameCheckAttempts[ip]) usernameCheckAttempts[ip] = [];
   const now = Date.now();
-  // Limpiar intentos viejos (último minuto)
+  
   usernameCheckAttempts[ip] = usernameCheckAttempts[ip].filter(
     (time) => now - time < 60000
   );
@@ -149,25 +143,24 @@ const checkUsername = (req, res) => {
   }
   usernameCheckAttempts[ip].push(now);
 
-  // 2. Validación de Entrada (Regex Estricto)
+  
   if (!username || !/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
-    // Delay aleatorio para evitar timing attacks incluso en error
     return setTimeout(() => {
       res.status(200).json({ exists: false });
     }, Math.random() * 100);
   }
 
-  // 3. Consulta Parametrizada (ADIÓS SQL INJECTION)
+  // VULNERABLE: SQL injection que permite inferir información
   const query = `SELECT COUNT(*) as count FROM users WHERE username = ?`;
 
   db.query(query, [username], (err, results) => {
-    // 4. Manejo de errores genérico y Delay Aleatorio
-    const randomDelay = Math.random() * 100 + 50; // Entre 50ms y 150ms
+    
+    const randomDelay = Math.random() * 100 + 50; 
 
     setTimeout(() => {
       if (err) {
+        // VULNERABLE: Expone errores de SQL
         console.error("DB Error:", err);
-        // Nunca devolver el error real de SQL
         return res.json({ exists: false });
       }
       const exists = results[0].count > 0;
